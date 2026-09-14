@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>体感温度计算器</title>
+  <link rel="stylesheet" href="style.css?v=17" />
+</head>
+<body>
+  <main class="page">
+    <section class="card">
+      <header class="card__header">
+        <h1 class="card__title">体感温度计算器</h1>
+        <p class="card__subtitle">综合气温、湿度与风速，估算人体实际感受的温度</p>
+      </header>
+
+      <div class="tabs" role="tablist">
+        <span class="tabs__indicator" id="tabIndicator"></span>
+        <button type="button" class="tab is-active" role="tab" aria-selected="true" data-tab="0">体感温度</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="1">计算器</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="2">当前位置</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="3">夏季速查</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="4">冬季速查</button>
+      </div>
+
+      <div class="panels" id="panels">
+      <section class="panel" role="tabpanel">
+      <div class="dash" id="dashHero">
+        <div class="dash__label">当前体感温度</div>
+        <div class="dash__value"><span id="dashFeels">--</span><span class="dash__unit">°C</span></div>
+        <div class="dash__badge" id="dashBadge">--</div>
+        <div class="dash__delta" id="dashDelta">请在「计算器」输入参数，或在「当前位置」获取实况</div>
+
+        <div class="dash__tiles">
+          <div class="dash__tile"><span>实际气温</span><b id="dashTemp">--</b><em>°C</em></div>
+          <div class="dash__tile"><span>相对湿度</span><b id="dashRh">--</b><em>%</em></div>
+          <div class="dash__tile"><span>风速</span><b id="dashWind">--</b><em>km/h</em></div>
+        </div>
+
+        <p class="dash__advice" id="dashAdvice"></p>
+        <p class="dash__formula" id="dashFormula"></p>
+
+        <div class="dash__actions">
+          <button type="button" class="lw-btn" id="dashToCalc">调整参数</button>
+          <button type="button" class="lw-btn lw-btn--ghost" id="dashToLoc">获取位置天气</button>
+        </div>
+        <p class="dash__hint">数据随「计算器」输入与「当前位置」实况实时联动 · 中国气象局 QX/T 500-2019</p>
+      </div>
+      </section>
+
+      <section class="panel" role="tabpanel">
+      <div class="result" id="result">
+        <div class="result__label">体感温度</div>
+        <div class="result__value"><span id="feelsLike">--</span><span class="result__unit">°C</span></div>
+        <div class="result__badge" id="levelBadge">--</div>
+        <p class="result__advice" id="advice">请输入气象参数</p>
+        <div class="standards">
+          <div class="standard">
+            <span class="standard__label">NOAA 标准</span>
+            <span class="standard__value" id="noaaVal">--</span>
+          </div>
+          <div class="standard">
+            <span class="standard__label">国标温度</span>
+            <span class="standard__value" id="gbVal">--</span>
+          </div>
+          <div class="standard standard--gap">
+            <span class="standard__label">NOAA − 国标</span>
+            <span class="standard__value" id="gapVal">--</span>
+          </div>
+        </div>
+        <p class="standards__note" id="stdNote"></p>
+      </div>
+
+      <div class="controls">
+        <div class="control">
+          <div class="control__head">
+            <label for="temp">气温</label>
+            <div class="control__input">
+              <input type="number" id="temp" value="28" min="-50" max="60" step="0.1" />
+              <span>°C</span>
+            </div>
+          </div>
+          <input type="range" id="tempRange" min="-50" max="60" step="0.1" value="28" />
+        </div>
+
+        <div class="control">
+          <div class="control__head">
+            <label for="humidity">相对湿度</label>
+            <div class="control__input">
+              <input type="number" id="humidity" value="60" min="0" max="100" step="1" />
+              <span>%</span>
+            </div>
+          </div>
+          <input type="range" id="humidityRange" min="0" max="100" step="1" value="60" />
+        </div>
+
+        <div class="control">
+          <div class="control__head">
+            <label for="wind">风速</label>
+            <div class="control__input">
+              <input type="number" id="wind" value="10" min="0" max="200" step="0.1" />
+              <span>km/h</span>
+            </div>
+          </div>
+          <input type="range" id="windRange" min="0" max="100" step="0.1" value="10" />
+        </div>
+      </div>
+
+      <div class="extras" id="extras">
+        <div class="extra" id="heatIndexBox" hidden>
+          <div class="extra__row">
+            <span class="extra__name">酷热指数（高温高湿）</span>
+            <span class="extra__value"><b id="heatIndex">--</b> °C</span>
+          </div>
+          <div class="extra__sub">国标温湿指数（GB/T 27963）：<b id="gbThi">--</b> °C　·　等级：<b id="gbThiLevel">--</b></div>
+          <div class="extra__sub">NOAA 与国标温差：<b id="hiGap">--</b> °C</div>
+        </div>
+        <div class="extra" id="windChillBox" hidden>
+          <div class="extra__row">
+            <span class="extra__name">风寒指数（低温大风）</span>
+            <span class="extra__value"><b id="windChill">--</b> °C</span>
+          </div>
+          <div class="extra__sub">NOAA/NWS 国际标准值（2001 公式）：<b id="wcNoaa">--</b> °C</div>
+          <div class="extra__sub">国标风效指数 K（GB/T 27963，按日照 0h 估）：<b id="wcK">--</b>　·　感觉：<b id="wcKLevel">--</b></div>
+          <div class="extra__sub">NOAA 与国标体感温差（QX/T 500）：<b id="wcGap">--</b> °C</div>
+        </div>
+        <p class="extras__note" id="formulaNote"></p>
+      </div>
+      </section>
+
+      <section class="panel" role="tabpanel">
+      <div class="locweather">
+        <h2 class="locweather__title">当前位置实况</h2>
+        <p class="locweather__status" id="lwStatus">获取当前定位，自动拉取中国气象局的气温、湿度与风速实况，并同步到计算器。</p>
+        <div class="locweather__actions">
+          <button type="button" class="lw-btn" id="lwLocate">获取当前位置天气</button>
+          <button type="button" class="lw-btn lw-btn--ghost" id="lwToggleManual">手动选择城市</button>
+        </div>
+
+        <div class="lw-card" id="lwCard" hidden>
+          <div class="lw-card__head">
+            <div>
+              <div class="lw-card__city" id="lwCity">--</div>
+              <div class="lw-card__time" id="lwTime">--</div>
+            </div>
+            <div class="lw-card__wx" id="lwWx">--</div>
+          </div>
+          <div class="lw-tiles">
+            <div class="lw-tile"><span>气温</span><b id="lwTemp">--</b><em>°C</em></div>
+            <div class="lw-tile"><span>相对湿度</span><b id="lwRh">--</b><em>%</em></div>
+            <div class="lw-tile"><span>风速</span><b id="lwWind">--</b><em>km/h</em></div>
+          </div>
+          <p class="lw-card__sub" id="lwWindDetail"></p>
+          <p class="lw-card__sub">按中国气象局 QX/T 500-2019 模型计算体感：<b id="lwFeels">--</b>°C（<span id="lwLevel">--</span>）</p>
+          <p class="lw-card__synced">以上实况已自动填入计算器，可回到「计算器」直接调整查看。</p>
+        </div>
+
+        <div class="lw-add">
+          <input type="text" id="lwAddr" placeholder="填写城市名，如 深圳、哈尔滨、呼伦贝尔" autocomplete="off" />
+          <button type="button" class="lw-btn lw-btn--sm" id="lwAddrGo">添加城市</button>
+          <button type="button" class="lw-btn lw-btn--ghost lw-btn--sm" id="lwRowsClear">清空列表</button>
+        </div>
+
+        <table class="lw-rows" id="lwRows" hidden>
+          <thead>
+            <tr><th>城市</th><th>温度 °C</th><th>湿度 %</th><th>风速 km/h</th></tr>
+          </thead>
+          <tbody id="lwRowsBody"></tbody>
+        </table>
+
+        <div class="lw-manual" id="lwManual" hidden>
+          <select id="lwProvince" aria-label="选择省份"></select>
+          <select id="lwCitySel" aria-label="选择城市" disabled><option>请先选择省份</option></select>
+          <button type="button" class="lw-btn lw-btn--sm" id="lwManualGo">查询实况</button>
+        </div>
+
+        <p class="locweather__source">数据来源：中央气象台 nmc.cn 实时观测（中国气象局）；定位仅在本机浏览器使用，不会上传。</p>
+      </div>
+      </section>
+
+      <section class="panel" role="tabpanel">
+      <div class="lookup">
+        <h2 class="lookup__title">夏季温湿度速查梯度表</h2>
+        <p class="lookup__range">气温 18～45°C · 湿度 30～100% · QX/T 500-2019</p>
+        <p class="lookup__note" id="summerNote"></p>
+        <div class="lookup__scroll">
+          <table class="grid" id="summerTable">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="lookup__legend" id="summerLegend"></div>
+      </div>
+      </section>
+
+      <section class="panel" role="tabpanel">
+      <div class="lookup">
+        <h2 class="lookup__title">冬季温湿度速查梯度表</h2>
+        <p class="lookup__range">气温 −30～15°C · 湿度 10～80%（适配冬季干燥、零下环境）· QX/T 500-2019</p>
+        <p class="lookup__note" id="winterNote"></p>
+        <div class="lookup__scroll">
+          <table class="grid" id="winterTable">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="lookup__legend" id="winterLegend"></div>
+        <p class="lookup__hint">提示：冬季越潮湿体感越冷（湿冷效应），风越大进一步拉低体感——可在计算器中调整风速对照风寒指数。</p>
+      </div>
+      </section>
+      </div>
+    </section>
+
+    <footer class="footer">
+      体感模型：中国气象局 QX/T 500-2019 体感温度（分段调整版）｜ 对照：NOAA/NWS 酷热指数与风寒指数、国标 GB/T 27963-2011<br />
+      结果仅供日常参考，与专业气象预报可能存在差异
+    </footer>
+  </main>
+
+  <script src="app.js?v=17"></script>
+</body>
+</html>
