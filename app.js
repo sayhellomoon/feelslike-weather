@@ -124,9 +124,14 @@ const track = $("panels");
 const tabBtns = Array.from(document.querySelectorAll(".tab"));
 const indicator = $("tabIndicator");
 const panelEls = Array.from(track.querySelectorAll(".panel"));
-let panelHeights = [0, 0, 0, 0, 0];
+let panelHeights = [0, 0, 0, 0, 0, 0];
 let activeIdx = 0;
 let rafPending = false;
+// 编程滚动（点击选项卡触发）的目标页：滚动途中不允许中间页回退高亮，防连点闪烁
+let programmaticTarget = null;
+// 点击动画期间用 CSS 过渡驱动容器高度（不随 scroll 事件逐帧写高度，避免每帧重排）
+let heightAnimUntil = 0;
+let heightAnimTimer = null;
 
 function measureHeights() {
   // 临时取消面板拉伸与高度约束，读取各自内容真实高度（同一同步任务内完成，无视觉闪烁）
@@ -135,11 +140,13 @@ function measureHeights() {
   panelEls.forEach((p) => {
     p.style.alignSelf = "flex-start";
     p.style.height = "auto";
+    p.style.contentVisibility = "visible"; // content-visibility 会让离屏面板报占位高度，测量时临时关闭
   });
   panelHeights = panelEls.map((p) => p.offsetHeight);
   panelEls.forEach((p) => {
     p.style.alignSelf = "";
     p.style.height = "";
+    p.style.contentVisibility = "";
   });
   track.style.height = prevTrackH;
 }
@@ -160,6 +167,20 @@ function applyActive(i) {
 
 function goTo(i) {
   i = Math.max(0, Math.min(panelEls.length - 1, i));
+  // 零帧延迟反馈：指示器与文字颜色同面板滚动同一刻启动（高刷下首帧即响应）
+  applyActive(i);
+  programmaticTarget = i;
+  // 容器高度交给 CSS 过渡一次性驱动（300ms，与指示器同步），避免 JS 监听 scroll 逐帧改高度引发整轨重排
+  if (panelHeights[i]) {
+    clearTimeout(heightAnimTimer);
+    track.style.transition = "height 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+    track.style.height = panelHeights[i] + "px";
+    heightAnimUntil = performance.now() + 320;
+    heightAnimTimer = setTimeout(() => {
+      track.style.transition = "";
+      heightAnimUntil = 0;
+    }, 330);
+  }
   track.scrollTo({ left: i * track.clientWidth, behavior: "smooth" });
 }
 
@@ -186,6 +207,11 @@ $("dashToLoc").addEventListener("click", () => {
 const dragState = { on: false, moved: false, axis: null, startX: 0, startY: 0, startLeft: 0, pointerId: null };
 
 track.addEventListener("pointerdown", (e) => {
+  programmaticTarget = null; // 任何用户手势接管，解除编程滚动的高亮锁定
+  // 用户手指/鼠标接管：立刻取消 CSS 高度过渡，交回随滚动逐帧插值，避免两套动画打架
+  if (heightAnimTimer) { clearTimeout(heightAnimTimer); heightAnimTimer = null; }
+  heightAnimUntil = 0;
+  track.style.transition = "";
   if (e.pointerType !== "mouse") return; // 触摸/触控板交给原生滑动
   if (e.target.closest("input, button, select, textarea, a, label")) return;
   if (e.target.closest(".lookup__scroll")) return; // 速查表区域留给表格自身滚动
@@ -250,8 +276,13 @@ track.addEventListener("scroll", () => {
     const w = track.clientWidth || 1;
     const progress = Math.min(panelEls.length - 1, Math.max(0, track.scrollLeft / w));
     const idx = Math.round(progress);
-    if (idx !== activeIdx) applyActive(idx);
-    // 相邻面板高度按滑动进度插值
+    // 吸附到位（误差 ≤2px）后解除编程滚动锁定
+    if (programmaticTarget !== null && Math.abs(track.scrollLeft - programmaticTarget * w) <= 2) {
+      programmaticTarget = null;
+    }
+    if (programmaticTarget === null && idx !== activeIdx) applyActive(idx);
+    // 相邻面板高度按滑动进度插值（点击选项卡的 CSS 高度过渡期间跳过，避免双重驱动+每帧重排）
+    if (performance.now() < heightAnimUntil) return;
     const lo = Math.floor(progress);
     const hi = Math.ceil(progress);
     if (panelHeights[lo]) {
@@ -266,6 +297,9 @@ let resizeTimer = null;
 window.addEventListener("resize", () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
+    track.style.transition = "";
+    if (heightAnimTimer) { clearTimeout(heightAnimTimer); heightAnimTimer = null; }
+    heightAnimUntil = 0;
     measureHeights();
     track.scrollLeft = activeIdx * track.clientWidth;
     track.style.height = panelHeights[activeIdx] + "px";
@@ -569,6 +603,26 @@ let lwAbort = null;
 function lwSetStatus(msg, isError) {
   lwUI.status.textContent = msg;
   lwUI.status.classList.toggle("is-error", !!isError);
+  // 错误同步弹顶部提示框，页面无反应时也有明确反馈
+  if (isError) showToast(msg, "error");
+}
+
+/** 顶部友好提示框（toast）：网络失败、城市未找到等一目了然 */
+let toastTimer = null;
+function showToast(msg, type) {
+  let el = document.getElementById("toast");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "toast";
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.remove("is-error", "is-ok");
+  if (type) el.classList.add("is-" + type);
+  void el.offsetWidth; // 强制重排，连续触发也能重新播放出现动画
+  el.classList.add("is-show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("is-show"), 3000);
 }
 
 async function lwFetchJSON(url, ms = 9000, externalSignal) {
@@ -835,7 +889,14 @@ function lwAddRow(real, windKmh) {
     tr = document.createElement("tr");
     tr.innerHTML =
       '<td><span class="lw-rows__name"></span><span class="lw-rows__time"></span></td>' +
-      '<td class="lw-rows__t"></td><td class="lw-rows__rh"></td><td class="lw-rows__w"></td>';
+      '<td class="lw-rows__t"></td><td class="lw-rows__rh"></td><td class="lw-rows__w"></td>' +
+      '<td><button type="button" class="lw-rows__del" aria-label="删除该城市">×</button></td>';
+    tr.querySelector(".lw-rows__del").addEventListener("click", () => {
+      lwRowMap.delete(code);
+      tr.remove();
+      if (!lwUI.rowsBody.children.length) lwUI.rows.hidden = true;
+      syncHeights();
+    });
     lwUI.rowsBody.appendChild(tr); // 新城市依次向下延伸
     lwRowMap.set(code, tr);
   }
@@ -1042,6 +1103,11 @@ function lwAddrQuery() {
     lwSetStatus("请先填写要查询的城市名。", true);
     return;
   }
+  // 简单校验：仅放行中文/字母（允许 ·、- 和空格），挡住乱字符直接去请求接口
+  if (!/^[\u4e00-\u9fa5a-zA-Z·\-\s]{2,20}$/.test(text)) {
+    lwSetStatus("请输入 2~20 位中文或字母的城市名（如 深圳），暂不支持数字和特殊符号。", true);
+    return;
+  }
   lwAddrQueue.push(text); // 入队；运行中提交也会依次执行
   lwUI.addr.value = "";
   lwAddrDrain();
@@ -1073,3 +1139,59 @@ update();
 // 字体加载完成后高度可能微调，补测一次
 window.addEventListener("load", syncHeights);
 setTimeout(syncHeights, 300);
+
+/* ---------- 调试：实时刷新率悬浮窗（页脚连点 5 次开关） ---------- */
+(function fpsMeter() {
+  let badge = null;
+  let rafId = 0;
+  let frames = 0;
+  let windowStart = 0;
+  let maxHz = 0;
+
+  function tick(t) {
+    if (!windowStart) windowStart = t;
+    frames++;
+    if (t - windowStart >= 500) {
+      const hz = (frames * 1000) / (t - windowStart);
+      if (hz > maxHz) maxHz = hz;
+      badge.textContent = Math.round(hz) + "Hz" + "  峰值" + Math.round(maxHz);
+      badge.classList.toggle("is-low", hz < 100);
+      frames = 0;
+      windowStart = t;
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function show() {
+    if (badge) return;
+    badge = document.createElement("div");
+    badge.id = "fpsBadge";
+    document.body.appendChild(badge);
+    frames = 0;
+    windowStart = 0;
+    maxHz = 0;
+    rafId = requestAnimationFrame(tick);
+  }
+
+  function hide() {
+    if (!badge) return;
+    cancelAnimationFrame(rafId);
+    badge.remove();
+    badge = null;
+  }
+
+  let taps = 0;
+  let tapTimer = 0;
+  const title = document.querySelector(".card__title");
+  if (title) {
+    title.addEventListener("click", () => {
+      taps++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(() => { taps = 0; }, 2000);
+      if (taps >= 5) {
+        taps = 0;
+        if (badge) hide(); else show();
+      }
+    });
+  }
+})();

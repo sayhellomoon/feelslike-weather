@@ -103,14 +103,21 @@ body {
   min-height: 18px;
 }
 
-/* ---------- 选项卡 ---------- */
+/* ---------- 选项卡（iOS 液体玻璃） ---------- */
 .tabs {
   position: relative;
   display: flex;
-  background: rgba(47, 128, 237, 0.08);
-  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.46), rgba(255, 255, 255, 0.22));
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 16px;
   padding: 4px;
   margin-bottom: 18px;
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  box-shadow:
+    0 4px 14px rgba(31, 45, 61, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .tab {
@@ -120,30 +127,44 @@ body {
   border: 0;
   background: none;
   padding: 9px 0;
-  border-radius: 9px;
+  border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
   font-family: inherit;
   color: var(--text-light);
   cursor: pointer;
   transition: color 0.25s ease;
+  /* 高刷屏适配：去除移动端点击 300ms 延迟、点击即时高亮 */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .tab.is-active {
-  color: #fff;
+  color: var(--text);
+  font-weight: 700;
 }
 
 .tabs__indicator {
   position: absolute;
   z-index: 0;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc((100% - 8px) / 5);
-  background: var(--accent);
-  border-radius: 9px;
-  box-shadow: 0 3px 8px rgba(47, 128, 237, 0.35);
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc((100% - 10px) / 6);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.28));
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow:
+    0 2px 10px rgba(31, 45, 61, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.85),
+    inset 0 -1px 2px rgba(31, 45, 61, 0.06);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* 提升为合成器层：指示器滑动全程在合成线程跑，不触发主线程重绘 */
+  will-change: transform;
 }
 
 /* ---------- 滑动面板轨道 ---------- */
@@ -156,6 +177,9 @@ body {
   -ms-overflow-style: none;
   touch-action: pan-x pan-y;
   cursor: grab;
+  /* 高刷屏适配：滚动提升到合成线程，横滑不波及页面其他部分 */
+  will-change: scroll-position;
+  overscroll-behavior-x: contain;
 }
 
 .panels::-webkit-scrollbar {
@@ -173,7 +197,26 @@ body {
   scroll-snap-stop: always;
   height: 100%;
   overflow: hidden;
+  /* 高刷丝滑关键：离屏面板跳过布局/绘制，滑动期间主线程不必重排两大速查表 */
+  content-visibility: auto;
+  contain-intrinsic-size: 380px 420px;
 }
+
+/* 调试用：实时刷新率悬浮窗（页脚连点 5 次开启） */
+#fpsBadge {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 99;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.62);
+  color: #42e66b;
+  font: 600 11px/1.5 ui-monospace, Menlo, Consolas, monospace;
+  pointer-events: none;
+  white-space: pre;
+}
+#fpsBadge.is-low { color: #ff6b57; }
 
 /* ---------- 标准对比条 ---------- */
 .standards {
@@ -402,12 +445,14 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 12px;
   padding: 10px 4px 8px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 1px 2px;
 }
 
 .dash__tile span {
+  flex-basis: 100%;
   font-size: 11px;
   color: var(--text-light);
 }
@@ -415,12 +460,13 @@ input[type="range"]::-moz-range-thumb {
 .dash__tile b {
   font-size: 22px;
   font-weight: 800;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
 .dash__tile em {
   font-style: normal;
-  font-size: 10px;
+  font-size: 11px;
   color: var(--text-light);
 }
 
@@ -574,12 +620,111 @@ input[type="range"]::-moz-range-thumb {
   display: inline-block;
 }
 
-.footer {
-  margin-top: 16px;
+/* ---------- 关于面板 ---------- */
+.about {
   text-align: center;
+  padding: 8px 4px 4px;
+}
+
+.about__title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.about__icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 8px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(31, 45, 61, 0.18);
+}
+
+.about__icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.about__version {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--text-light);
+  margin-bottom: 18px;
+}
+
+.about__section {
+  text-align: left;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+
+.about__section h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.about__section p {
+  font-size: 12px;
+  color: var(--text-light);
   line-height: 1.6;
+}
+
+.about__formula {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11px;
+  background: rgba(47, 128, 237, 0.06);
+  border-radius: 8px;
+  padding: 6px 8px;
+  margin-top: 4px;
+}
+
+.about__copyright {
+  margin-top: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+/* ---------- 友好提示框（toast） ---------- */
+#toast {
+  position: fixed;
+  left: 50%;
+  top: 18px;
+  z-index: 100;
+  transform: translate(-50%, -16px);
+  max-width: 86vw;
+  padding: 10px 18px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #fff;
+  background: rgba(45, 55, 72, 0.74);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: 0 10px 30px rgba(31, 45, 61, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.34, 1.4, 0.64, 1);
+  white-space: pre-line;
+}
+
+#toast.is-show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+#toast.is-error {
+  background: rgba(198, 40, 40, 0.8);
+}
+
+#toast.is-ok {
+  background: rgba(46, 125, 50, 0.78);
 }
 
 /* ---------- 当前位置实况 ---------- */
@@ -607,18 +752,26 @@ input[type="range"]::-moz-range-thumb {
   margin-bottom: 14px;
 }
 
+/* 液体玻璃按钮 */
 .lw-btn {
-  border: 0;
-  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 12px;
   padding: 10px 16px;
   font-size: 13px;
   font-weight: 600;
   font-family: inherit;
   color: #fff;
-  background: var(--accent);
-  box-shadow: 0 3px 8px rgba(47, 128, 237, 0.3);
+  background: linear-gradient(135deg, rgba(47, 128, 237, 0.88), rgba(106, 90, 224, 0.82));
+  backdrop-filter: blur(10px) saturate(150%);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  box-shadow:
+    0 4px 12px rgba(47, 128, 237, 0.32),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -1px 2px rgba(0, 30, 90, 0.18);
   cursor: pointer;
-  transition: transform 0.15s, opacity 0.15s;
+  transition: transform 0.15s, opacity 0.15s, box-shadow 0.15s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .lw-btn:active {
@@ -631,9 +784,11 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .lw-btn--ghost {
-  background: rgba(47, 128, 237, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.32));
   color: var(--accent);
-  box-shadow: none;
+  box-shadow:
+    0 2px 8px rgba(31, 45, 61, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
 .lw-btn--sm {
@@ -700,6 +855,7 @@ input[type="range"]::-moz-range-thumb {
 
 .lw-tile b {
   font-size: 20px;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
@@ -784,6 +940,17 @@ input[type="range"]::-moz-range-thumb {
 .lw-rows th:first-child {
   text-align: left;
   padding-left: 12px;
+  width: 30%;
+}
+
+.lw-rows th:nth-child(2),
+.lw-rows th:nth-child(3),
+.lw-rows th:nth-child(4) {
+  width: 19%;
+}
+
+.lw-rows th:nth-child(5) {
+  width: 13%;
 }
 
 .lw-rows td {
@@ -821,6 +988,35 @@ input[type="range"]::-moz-range-thumb {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* 单行删除按钮：flex 居中 × 号，点击区域够大 */
+.lw-rows__del {
+  border: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(230, 57, 70, 0.12);
+  color: #c62828;
+  font-size: 18px;
+  line-height: 1;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lw-rows__del:hover {
+  background: rgba(230, 57, 70, 0.2);
+}
+
+.lw-rows__del:active {
+  transform: scale(0.85);
+  background: rgba(230, 57, 70, 0.3);
 }
 
 .locweather__source {
