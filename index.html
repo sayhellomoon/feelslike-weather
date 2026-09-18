@@ -3,70 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>体感温度计算器</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201024%201024%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22skyG%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23F6BE8E%22%2F%3E%3Cstop%20offset%3D%220.52%22%20stop-color%3D%22%23C9B79C%22%2F%3E%3Cstop%20offset%3D%220.58%22%20stop-color%3D%22%238FBFB9%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23478E8A%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22cloudG%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23FFFDF8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23F3E5D2%22%2F%3E%3C%2FlinearGradient%3E%3Cg%20id%3D%22cloudBold%22%3E%3Crect%20x%3D%22185%22%20y%3D%22600%22%20width%3D%22632%22%20height%3D%22172%22%20rx%3D%2286%22%2F%3E%3Ccircle%20cx%3D%22357%22%20cy%3D%22592%22%20r%3D%22158%22%2F%3E%3Ccircle%20cx%3D%22513%22%20cy%3D%22498%22%20r%3D%22200%22%2F%3E%3Ccircle%20cx%3D%22689%22%20cy%3D%22596%22%20r%3D%22150%22%2F%3E%3C%2Fg%3E%3CclipPath%20id%3D%22cloudBoldClip%22%3E%3Cuse%20href%3D%22%23cloudBold%22%2F%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221024%22%20height%3D%221024%22%20rx%3D%22226%22%20fill%3D%22url%28%23skyG%29%22%2F%3E%3Cuse%20href%3D%22%23cloudBold%22%20fill%3D%22url%28%23cloudG%29%22%2F%3E%3Cg%20clip-path%3D%22url%28%23cloudBoldClip%29%22%3E%3Crect%20x%3D%22160%22%20y%3D%22668%22%20width%3D%22720%22%20height%3D%22120%22%20fill%3D%22%235E9E99%22%20opacity%3D%220.30%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E" />
-  <link rel="stylesheet" href="style.css?v=22" />
+  <title data-i18n="app.title">Qi温</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201024%201024%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22skyG%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23F6BE8E%22%2F%3E%3Cstop%20offset%3D%220.52%22%20stop-color%3D%22%23C9B79C%22%2F%3E%3Cstop%20offset%3D%220.58%22%20stop-color%3D%22%238FBFB9%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23478E8A%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22cloudG%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23FFFDF8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23F3E5D2%22%2F%3E%3C%2FlinearGradient%3E%3Cg%20id%3D%22cloudBold%22%3E%3Crect%20x%3D%22185%22%20y%3D%22600%22%20width%3D%22632%22%20height%3D%22172%22%20rx%3D%2286%22%2F%3E%3Ccircle%20cx%3D%22357%22%20cy%3D%22592%22%20r%3D%22158%22%2F%3E%3Ccircle%20cx%3D%22513%22%20cy%3D%22498%22%20r%3D%22200%22%2F%3E%3Ccircle%20cx%3D%22689%22%20cy%3D%22596%22%20r%3D%22150%22%2F%3E%3C%2Fg%3E%3CclipPath%20id%3D%22cloudBoldClip%22%3E%3Cuse%20href%3D%22%23cloudBold%22%2F%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221024%22%20height%3D%221024%22%20rx%3D%22226%22%20fill%3D%22url%28%23skyG%29%22%2F%3E%3Cuse%20href%3D%22%23cloudBold%22%20fill%3D%22url%28%23cloudG%29%22%2F%3E%3Cg%20clip-path%3D%22url%28%23cloudBoldClip%29%22%3E%3Crect%20x%3D%22160%22%20y%3D%22668%22%20width%3D%22720%22%20height%3D%22120%22%20fill%3D%22%235E9E99%22%20opacity%3D%220.30%22%2F%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%22495%22%20r%3D%2210%22%20fill%3D%22%23E8552D%22%2F%3E%3Crect%20x%3D%22505%22%20y%3D%22510%22%20width%3D%2214%22%20height%3D%2250%22%20rx%3D%227%22%20fill%3D%22%23E8552D%22%2F%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%22568%22%20r%3D%2220%22%20fill%3D%22%23E8552D%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E" />
+  <link rel="stylesheet" href="style.css?v=32" />
 </head>
 <body>
   <main class="page">
     <section class="card">
       <header class="card__header">
-        <h1 class="card__title">体感温度计算器</h1>
-        <p class="card__subtitle">综合气温、湿度与风速，估算人体实际感受的温度</p>
+        <h1 class="card__title" data-i18n="app.title">Qi温</h1>
+        <p class="card__subtitle" data-i18n="app.subtitle">综合气温、湿度与风速，估算人体实际感受的温度</p>
       </header>
 
       <div class="tabs" role="tablist">
         <span class="tabs__indicator" id="tabIndicator"></span>
-        <button type="button" class="tab is-active" role="tab" aria-selected="true" data-tab="0">体感温度</button>
-        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="1">计算器</button>
-        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="2">当前位置</button>
-        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="3">夏季速查</button>
-        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="4">冬季速查</button>
-        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="5">关于</button>
+        <button type="button" class="tab is-active" role="tab" aria-selected="true" data-tab="0" data-i18n="tab.dash">体感温度</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="1" data-i18n="tab.calc">计算器</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="2" data-i18n="tab.loc">当前位置</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="3" data-i18n="tab.summer">夏季速查</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="4" data-i18n="tab.winter">冬季速查</button>
+        <button type="button" class="tab" role="tab" aria-selected="false" data-tab="5" data-i18n="tab.about">关于</button>
       </div>
 
       <div class="panels" id="panels">
       <section class="panel" role="tabpanel">
       <div class="dash" id="dashHero">
-        <div class="dash__label">当前体感温度</div>
-        <div class="dash__value"><span id="dashFeels">--</span><span class="dash__unit">°C</span></div>
+        <div class="dash__label" data-i18n="dash.label">当前体感温度</div>
+        <div class="dash__value"><span id="dashFeels">--</span><span class="dash__unit" data-unit>°C</span></div>
         <div class="dash__badge" id="dashBadge">--</div>
-        <div class="dash__delta" id="dashDelta">请在「计算器」输入参数，或在「当前位置」获取实况</div>
+        <div class="dash__delta" id="dashDelta" data-i18n="dash.deltaPlaceholder">请在「计算器」输入参数，或在「当前位置」获取实况</div>
 
         <div class="dash__tiles">
-          <div class="dash__tile"><span>实际气温</span><b id="dashTemp">--</b><em>°C</em></div>
-          <div class="dash__tile"><span>相对湿度</span><b id="dashRh">--</b><em>%</em></div>
-          <div class="dash__tile"><span>风速</span><b id="dashWind">--</b><em>km/h</em></div>
+          <div class="dash__tile"><span data-i18n="dash.tile.temp">实际气温</span><b id="dashTemp">--</b><em data-unit>°C</em></div>
+          <div class="dash__tile"><span data-i18n="dash.tile.rh">相对湿度</span><b id="dashRh">--</b><em>%</em></div>
+          <div class="dash__tile"><span data-i18n="dash.tile.wind">风速</span><b id="dashWind">--</b><em>km/h</em></div>
         </div>
 
         <p class="dash__advice" id="dashAdvice"></p>
         <p class="dash__formula" id="dashFormula"></p>
 
         <div class="dash__actions">
-          <button type="button" class="lw-btn" id="dashToCalc">调整参数</button>
-          <button type="button" class="lw-btn lw-btn--ghost" id="dashToLoc">获取位置天气</button>
+          <button type="button" class="lw-btn" id="dashToCalc" data-i18n="dash.btn.adjust">调整参数</button>
+          <button type="button" class="lw-btn lw-btn--ghost" id="dashToLoc" data-i18n="dash.btn.loc">获取位置天气</button>
         </div>
-        <p class="dash__hint">数据随「计算器」输入与「当前位置」实况实时联动 · 中国气象局 QX/T 500-2019</p>
+        <p class="dash__hint" data-i18n="dash.hint">数据随「计算器」输入与「当前位置」实况实时联动 · 中国气象局 QX/T 500-2019</p>
       </div>
       </section>
 
       <section class="panel" role="tabpanel">
       <div class="result" id="result">
-        <div class="result__label">体感温度</div>
-        <div class="result__value"><span id="feelsLike">--</span><span class="result__unit">°C</span></div>
+        <div class="result__label" data-i18n="result.label">体感温度</div>
+        <div class="result__value"><span id="feelsLike">--</span><span class="result__unit" data-unit>°C</span></div>
         <div class="result__badge" id="levelBadge">--</div>
-        <p class="result__advice" id="advice">请输入气象参数</p>
+        <p class="result__advice" id="advice" data-i18n="result.advicePlaceholder">请输入气象参数</p>
         <div class="standards">
           <div class="standard">
-            <span class="standard__label">NOAA 标准</span>
+            <span class="standard__label" data-i18n="standard.noaa">NOAA 标准</span>
             <span class="standard__value" id="noaaVal">--</span>
           </div>
           <div class="standard">
-            <span class="standard__label">国标温度</span>
+            <span class="standard__label" data-i18n="standard.gb">国标温度</span>
             <span class="standard__value" id="gbVal">--</span>
           </div>
           <div class="standard standard--gap">
-            <span class="standard__label">NOAA − 国标</span>
+            <span class="standard__label" data-i18n="standard.gap">NOAA − 国标</span>
             <span class="standard__value" id="gapVal">--</span>
           </div>
         </div>
@@ -76,10 +76,10 @@
       <div class="controls">
         <div class="control">
           <div class="control__head">
-            <label for="temp">气温</label>
+            <label for="temp" data-i18n="control.temp">气温</label>
             <div class="control__input">
               <input type="number" id="temp" value="28" min="-50" max="60" step="0.1" />
-              <span>°C</span>
+              <span data-unit>°C</span>
             </div>
           </div>
           <input type="range" id="tempRange" min="-50" max="60" step="0.1" value="28" />
@@ -87,7 +87,7 @@
 
         <div class="control">
           <div class="control__head">
-            <label for="humidity">相对湿度</label>
+            <label for="humidity" data-i18n="control.humidity">相对湿度</label>
             <div class="control__input">
               <input type="number" id="humidity" value="60" min="0" max="100" step="1" />
               <span>%</span>
@@ -98,7 +98,7 @@
 
         <div class="control">
           <div class="control__head">
-            <label for="wind">风速</label>
+            <label for="wind" data-i18n="control.wind">风速</label>
             <div class="control__input">
               <input type="number" id="wind" value="10" min="0" max="200" step="0.1" />
               <span>km/h</span>
@@ -111,20 +111,20 @@
       <div class="extras" id="extras">
         <div class="extra" id="heatIndexBox" hidden>
           <div class="extra__row">
-            <span class="extra__name">酷热指数（高温高湿）</span>
-            <span class="extra__value"><b id="heatIndex">--</b> °C</span>
+            <span class="extra__name" data-i18n="extra.heatIndex">酷热指数（高温高湿）</span>
+            <span class="extra__value"><b id="heatIndex">--</b> <span data-unit>°C</span></span>
           </div>
-          <div class="extra__sub">国标温湿指数（GB/T 27963）：<b id="gbThi">--</b> °C　·　等级：<b id="gbThiLevel">--</b></div>
-          <div class="extra__sub">NOAA 与国标温差：<b id="hiGap">--</b> °C</div>
+          <div class="extra__sub"><span data-i18n="extra.thiSub">国标温湿指数（GB/T 27963）</span><span data-i18n="extra.colon">：</span><b id="gbThi">--</b> <span data-unit>°C</span><span data-i18n="extra.sep">　·　</span><span data-i18n="extra.thiLevel">等级</span><span data-i18n="extra.colon">：</span><b id="gbThiLevel">--</b></div>
+          <div class="extra__sub"><span data-i18n="extra.hiGap">NOAA 与国标温差</span><span data-i18n="extra.colon">：</span><b id="hiGap">--</b> <span data-unit>°C</span></div>
         </div>
         <div class="extra" id="windChillBox" hidden>
           <div class="extra__row">
-            <span class="extra__name">风寒指数（低温大风）</span>
-            <span class="extra__value"><b id="windChill">--</b> °C</span>
+            <span class="extra__name" data-i18n="extra.windChill">风寒指数（低温大风）</span>
+            <span class="extra__value"><b id="windChill">--</b> <span data-unit>°C</span></span>
           </div>
-          <div class="extra__sub">NOAA/NWS 国际标准值（2001 公式）：<b id="wcNoaa">--</b> °C</div>
-          <div class="extra__sub">国标风效指数 K（GB/T 27963，按日照 0h 估）：<b id="wcK">--</b>　·　感觉：<b id="wcKLevel">--</b></div>
-          <div class="extra__sub">NOAA 与国标体感温差（QX/T 500）：<b id="wcGap">--</b> °C</div>
+          <div class="extra__sub"><span data-i18n="extra.wcNoaa">NOAA/NWS 国际标准值（2001 公式）</span><span data-i18n="extra.colon">：</span><b id="wcNoaa">--</b> <span data-unit>°C</span></div>
+          <div class="extra__sub"><span data-i18n="extra.wcK">国标风效指数 K（GB/T 27963，按日照 0h 估）</span><span data-i18n="extra.colon">：</span><b id="wcK">--</b><span data-i18n="extra.sep">　·　</span><span data-i18n="extra.wcFeeling">感觉</span><span data-i18n="extra.colon">：</span><b id="wcKLevel">--</b></div>
+          <div class="extra__sub"><span data-i18n="extra.wcGap">NOAA 与国标体感温差（QX/T 500）</span><span data-i18n="extra.colon">：</span><b id="wcGap">--</b> <span data-unit>°C</span></div>
         </div>
         <p class="extras__note" id="formulaNote"></p>
       </div>
@@ -132,11 +132,11 @@
 
       <section class="panel" role="tabpanel">
       <div class="locweather">
-        <h2 class="locweather__title">当前位置实况</h2>
-        <p class="locweather__status" id="lwStatus">获取当前定位，自动拉取中国气象局的气温、湿度与风速实况，并同步到计算器。</p>
+        <h2 class="locweather__title" data-i18n="loc.title">当前位置实况</h2>
+        <p class="locweather__status" id="lwStatus" data-i18n="loc.status">获取当前定位，自动拉取中国气象局的气温、湿度与风速实况，并同步到计算器。</p>
         <div class="locweather__actions">
-          <button type="button" class="lw-btn" id="lwLocate">获取当前位置天气</button>
-          <button type="button" class="lw-btn lw-btn--ghost" id="lwToggleManual">手动选择城市</button>
+          <button type="button" class="lw-btn" id="lwLocate" data-i18n="loc.btn.locate">获取当前位置天气</button>
+          <button type="button" class="lw-btn lw-btn--ghost" id="lwToggleManual" data-i18n="loc.btn.manual">手动选择城市</button>
         </div>
 
         <div class="lw-card" id="lwCard" hidden>
@@ -148,42 +148,42 @@
             <div class="lw-card__wx" id="lwWx">--</div>
           </div>
           <div class="lw-tiles">
-            <div class="lw-tile"><span>气温</span><b id="lwTemp">--</b><em>°C</em></div>
-            <div class="lw-tile"><span>相对湿度</span><b id="lwRh">--</b><em>%</em></div>
-            <div class="lw-tile"><span>风速</span><b id="lwWind">--</b><em>km/h</em></div>
+            <div class="lw-tile"><span data-i18n="loc.tile.temp">气温</span><b id="lwTemp">--</b><em data-unit>°C</em></div>
+            <div class="lw-tile"><span data-i18n="loc.tile.rh">相对湿度</span><b id="lwRh">--</b><em>%</em></div>
+            <div class="lw-tile"><span data-i18n="loc.tile.wind">风速</span><b id="lwWind">--</b><em>km/h</em></div>
           </div>
           <p class="lw-card__sub" id="lwWindDetail"></p>
-          <p class="lw-card__sub">按中国气象局 QX/T 500-2019 模型计算体感：<b id="lwFeels">--</b>°C（<span id="lwLevel">--</span>）</p>
-          <p class="lw-card__synced">以上实况已自动填入计算器，可回到「计算器」直接调整查看。</p>
+          <p class="lw-card__sub"><span data-i18n="loc.card.sub">按中国气象局 QX/T 500-2019 模型计算体感</span>：<b id="lwFeels">--</b><span data-unit>°C</span>（<span id="lwLevel">--</span>）</p>
+          <p class="lw-card__synced" data-i18n="loc.card.synced">以上实况已自动填入计算器，可回到「计算器」直接调整查看。</p>
         </div>
 
         <div class="lw-add">
-          <input type="text" id="lwAddr" placeholder="填写城市名，如 深圳、哈尔滨、呼伦贝尔" autocomplete="off" maxlength="20" />
-          <button type="button" class="lw-btn lw-btn--sm" id="lwAddrGo">添加城市</button>
-          <button type="button" class="lw-btn lw-btn--ghost lw-btn--sm" id="lwRowsClear">清空列表</button>
+          <input type="text" id="lwAddr" placeholder="填写城市名，如 深圳、哈尔滨、呼伦贝尔" data-i18n-placeholder="loc.addr.placeholder" autocomplete="off" maxlength="20" />
+          <button type="button" class="lw-btn lw-btn--sm" id="lwAddrGo" data-i18n="loc.btn.addCity">添加城市</button>
+          <button type="button" class="lw-btn lw-btn--ghost lw-btn--sm" id="lwRowsClear" data-i18n="loc.btn.clear">清空列表</button>
         </div>
 
         <table class="lw-rows" id="lwRows" hidden>
           <thead>
-            <tr><th>城市</th><th>温度 °C</th><th>湿度 %</th><th>风速 km/h</th><th aria-label="操作"></th></tr>
+            <tr><th data-i18n="loc.rows.city">城市</th><th><span data-i18n="loc.rows.temp">温度</span> <span data-unit>°C</span></th><th><span data-i18n="loc.rows.rh">湿度</span> %</th><th><span data-i18n="loc.rows.wind">风速</span> km/h</th><th data-i18n-aria-label="loc.rows.action"></th></tr>
           </thead>
           <tbody id="lwRowsBody"></tbody>
         </table>
 
         <div class="lw-manual" id="lwManual" hidden>
-          <select id="lwProvince" aria-label="选择省份"></select>
-          <select id="lwCitySel" aria-label="选择城市" disabled><option>请先选择省份</option></select>
-          <button type="button" class="lw-btn lw-btn--sm" id="lwManualGo">查询实况</button>
+          <select id="lwProvince" data-i18n-aria-label="loc.manual.province" aria-label="选择省份"></select>
+          <select id="lwCitySel" data-i18n-aria-label="loc.manual.city" aria-label="选择城市" disabled><option data-i18n="loc.manual.firstSelect">请先选择省份</option></select>
+          <button type="button" class="lw-btn lw-btn--sm" id="lwManualGo" data-i18n="loc.btn.query">查询实况</button>
         </div>
 
-        <p class="locweather__source">数据来源：中央气象台 nmc.cn 实时观测（中国气象局）；定位仅在本机浏览器使用，不会上传。</p>
+        <p class="locweather__source" data-i18n="loc.source">数据来源：中央气象台 nmc.cn 实时观测（中国气象局）；定位仅在本机浏览器使用，不会上传。</p>
       </div>
       </section>
 
       <section class="panel" role="tabpanel">
       <div class="lookup">
-        <h2 class="lookup__title">夏季温湿度速查梯度表</h2>
-        <p class="lookup__range">气温 18～45°C · 湿度 30～100% · QX/T 500-2019</p>
+        <h2 class="lookup__title" data-i18n="lookup.summer.title">夏季温湿度速查梯度表</h2>
+        <p class="lookup__range" data-i18n="lookup.summer.range">气温 18～45°C · 湿度 30～100% · QX/T 500-2019</p>
         <p class="lookup__note" id="summerNote"></p>
         <div class="lookup__scroll">
           <table class="grid" id="summerTable">
@@ -197,8 +197,8 @@
 
       <section class="panel" role="tabpanel">
       <div class="lookup">
-        <h2 class="lookup__title">冬季温湿度速查梯度表</h2>
-        <p class="lookup__range">气温 −30～15°C · 湿度 10～80%（适配冬季干燥、零下环境）· QX/T 500-2019</p>
+        <h2 class="lookup__title" data-i18n="lookup.winter.title">冬季温湿度速查梯度表</h2>
+        <p class="lookup__range" data-i18n="lookup.winter.range">气温 −30～15°C · 湿度 10～80%（适配冬季干燥、零下环境）· QX/T 500-2019</p>
         <p class="lookup__note" id="winterNote"></p>
         <div class="lookup__scroll">
           <table class="grid" id="winterTable">
@@ -207,35 +207,65 @@
           </table>
         </div>
         <div class="lookup__legend" id="winterLegend"></div>
-        <p class="lookup__hint">提示：冬季越潮湿体感越冷（湿冷效应），风越大进一步拉低体感——可在计算器中调整风速对照风寒指数。</p>
+        <p class="lookup__hint" data-i18n="lookup.winter.hint">提示：冬季越潮湿体感越冷（湿冷效应），风越大进一步拉低体感——可在计算器中调整风速对照风寒指数。</p>
       </div>
       </section>
 
       <section class="panel" role="tabpanel">
       <div class="about">
-        <h2 class="about__title">关于本应用</h2>
+        <h2 class="about__title" data-i18n="about.title">关于本应用</h2>
         <div class="about__icon">
-          <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201024%201024%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22skyG%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23F6BE8E%22%2F%3E%3Cstop%20offset%3D%220.52%22%20stop-color%3D%22%23C9B79C%22%2F%3E%3Cstop%20offset%3D%220.58%22%20stop-color%3D%22%238FBFB9%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23478E8A%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22cloudG%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23FFFDF8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23F3E5D2%22%2F%3E%3C%2FlinearGradient%3E%3Cg%20id%3D%22cloudBold%22%3E%3Crect%20x%3D%22185%22%20y%3D%22600%22%20width%3D%22632%22%20height%3D%22172%22%20rx%3D%2286%22%2F%3E%3Ccircle%20cx%3D%22357%22%20cy%3D%22592%22%20r%3D%22158%22%2F%3E%3Ccircle%20cx%3D%22513%22%20cy%3D%22498%22%20r%3D%22200%22%2F%3E%3Ccircle%20cx%3D%22689%22%20cy%3D%22596%22%20r%3D%22150%22%2F%3E%3C%2Fg%3E%3CclipPath%20id%3D%22cloudBoldClip%22%3E%3Cuse%20href%3D%22%23cloudBold%22%2F%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221024%22%20height%3D%221024%22%20rx%3D%22226%22%20fill%3D%22url%28%23skyG%29%22%2F%3E%3Cuse%20href%3D%22%23cloudBold%22%20fill%3D%22url%28%23cloudG%29%22%2F%3E%3Cg%20clip-path%3D%22url%28%23cloudBoldClip%29%22%3E%3Crect%20x%3D%22160%22%20y%3D%22668%22%20width%3D%22720%22%20height%3D%22120%22%20fill%3D%22%235E9E99%22%20opacity%3D%220.30%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="体感温度计算器" />
+          <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201024%201024%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22skyG%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23F6BE8E%22%2F%3E%3Cstop%20offset%3D%220.52%22%20stop-color%3D%22%23C9B79C%22%2F%3E%3Cstop%20offset%3D%220.58%22%20stop-color%3D%22%238FBFB9%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23478E8A%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22cloudG%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23FFFDF8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23F3E5D2%22%2F%3E%3C%2FlinearGradient%3E%3Cg%20id%3D%22cloudBold%22%3E%3Crect%20x%3D%22185%22%20y%3D%22600%22%20width%3D%22632%22%20height%3D%22172%22%20rx%3D%2286%22%2F%3E%3Ccircle%20cx%3D%22357%22%20cy%3D%22592%22%20r%3D%22158%22%2F%3E%3Ccircle%20cx%3D%22513%22%20cy%3D%22498%22%20r%3D%22200%22%2F%3E%3Ccircle%20cx%3D%22689%22%20cy%3D%22596%22%20r%3D%22150%22%2F%3E%3C%2Fg%3E%3CclipPath%20id%3D%22cloudBoldClip%22%3E%3Cuse%20href%3D%22%23cloudBold%22%2F%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3Crect%20x%3D%220%22%20y%3D%220%22%20width%3D%221024%22%20height%3D%221024%22%20rx%3D%22226%22%20fill%3D%22url%28%23skyG%29%22%2F%3E%3Cuse%20href%3D%22%23cloudBold%22%20fill%3D%22url%28%23cloudG%29%22%2F%3E%3Cg%20clip-path%3D%22url%28%23cloudBoldClip%29%22%3E%3Crect%20x%3D%22160%22%20y%3D%22668%22%20width%3D%22720%22%20height%3D%22120%22%20fill%3D%22%235E9E99%22%20opacity%3D%220.30%22%2F%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%22495%22%20r%3D%2210%22%20fill%3D%22%23E8552D%22%2F%3E%3Crect%20x%3D%22505%22%20y%3D%22510%22%20width%3D%2214%22%20height%3D%2250%22%20rx%3D%227%22%20fill%3D%22%23E8552D%22%2F%3E%3Ccircle%20cx%3D%22512%22%20cy%3D%22568%22%20r%3D%2220%22%20fill%3D%22%23E8552D%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt="Qi温" />
         </div>
-        <p class="about__version">版本 v1.3</p>
+        <p class="about__version" data-i18n="about.version">版本 v1.4.2</p>
         <div class="about__section">
-          <h3>体感计算模型</h3>
-          <p>中国气象局 QX/T 500-2019 体感温度（分段调整版）</p>
-          <p class="about__formula">夏季：Ts = T + (RH−70)/15 − (V−2)/2<br />冬季：Ts = T − (RH−70)/15 − (V−2)/2</p>
-        </div>
-        <div class="about__section">
-          <h3>对照参考</h3>
-          <p>NOAA/NWS 酷热指数与风寒指数</p>
-          <p>国标 GB/T 27963-2011 温湿指数与风效指数</p>
+          <h3 data-i18n="about.section.model">体感计算模型</h3>
+          <p data-i18n="about.model.desc">中国气象局 QX/T 500-2019 体感温度（分段调整版）</p>
+          <p class="about__formula" data-i18n="about.model.formula">夏季：Ts = T + (RH−70)/15 − (V−2)/2<br />冬季：Ts = T − (RH−70)/15 − (V−2)/2</p>
         </div>
         <div class="about__section">
-          <h3>数据来源</h3>
-          <p>中央气象台 nmc.cn 实时观测（中国气象局）</p>
-          <p>定位仅在本机浏览器使用，不会上传。</p>
+          <h3 data-i18n="about.section.ref">对照参考</h3>
+          <p data-i18n="about.ref.noaa">NOAA/NWS 酷热指数与风寒指数</p>
+          <p data-i18n="about.ref.gb">国标 GB/T 27963-2011 温湿指数与风效指数</p>
         </div>
         <div class="about__section">
-          <h3>免责声明</h3>
-          <p>结果仅供日常参考，与专业气象预报可能存在差异。</p>
+          <h3 data-i18n="about.section.source">数据来源</h3>
+          <p data-i18n="about.source.nmc">中央气象台 nmc.cn 实时观测（中国气象局）</p>
+          <p data-i18n="about.source.privacy">定位仅在本机浏览器使用，不会上传。</p>
+        </div>
+        <div class="about__section">
+          <h3 data-i18n="about.section.disclaimer">免责声明</h3>
+          <p data-i18n="about.disclaimer">结果仅供日常参考，与专业气象预报可能存在差异。</p>
+        </div>
+        <div class="about__section">
+          <h3 data-i18n="about.section.lang">语言 Language</h3>
+          <p data-i18n="about.lang.desc">切换显示语言（重启后保持选择）</p>
+          <select id="langSelect" style="margin-top:6px;">
+            <option value="zh-CN" data-i18n="about.lang.zh">简体中文</option>
+            <option value="en-US" data-i18n="about.lang.en">English</option>
+          </select>
+        </div>
+        <div class="about__section">
+          <h3 data-i18n="about.section.unit">温度单位 Temperature Unit</h3>
+          <p data-i18n="about.unit.desc">切换温度显示单位（公式内部仍以 °C 运算）</p>
+          <select id="unitSelect" style="margin-top:6px;">
+            <option value="C" data-i18n="about.unit.c">摄氏度 °C</option>
+            <option value="F" data-i18n="about.unit.f">华氏度 °F</option>
+          </select>
+        </div>
+        <div class="about__section">
+          <h3 data-i18n="about.section.blur">动态模糊效果</h3>
+          <p data-i18n="about.blur.desc">毛玻璃背景效果，关闭后以纯色背景替代，不影响功能。</p>
+          <p id="blurTip" style="display:none;color:#e65100;font-size:13px;" data-i18n="about.blur.tip">天玑芯片：开启毛玻璃容易产生画面掉帧，建议保持关闭。</p>
+          <button type="button" class="lw-btn lw-btn--sm" id="blurToggle" data-i18n="about.btn.toggleBlur">切换模糊效果</button>
+        </div>
+        <div class="about__section">
+          <h3 data-i18n="about.section.repo">开源仓库与更新</h3>
+          <p data-i18n="about.repo.desc">项目源码托管在 GitHub，欢迎反馈问题与建议。</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+            <button type="button" class="lw-btn lw-btn--sm" id="githubLink" data-i18n="about.btn.github">GitHub 仓库</button>
+            <button type="button" class="lw-btn lw-btn--sm" id="checkUpdateBtn" data-i18n="about.btn.checkUpdate">检查更新</button>
+          </div>
         </div>
         <p class="about__copyright">Developed by Taylor. All rights reserved.</p>
       </div>
@@ -244,6 +274,6 @@
     </section>
   </main>
 
-  <script src="app.js?v=22"></script>
+  <script src="app.js?v=33"></script>
 </body>
 </html>

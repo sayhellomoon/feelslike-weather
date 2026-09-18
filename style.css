@@ -24,6 +24,17 @@ body {
   padding: 24px 16px;
 }
 
+/* 策略A/D：全局动态模糊开关 —— body.no-blur 时移除所有 backdrop-filter，
+   彻底规避 GPU 合成开销（天玑 Immortalis-G720 等机型实测抖动根因）。
+   用户可在关于页面手动开关；K90 MAX 等机型首次自动启用。 */
+body.no-blur .card,
+body.no-blur .tabs__indicator,
+body.no-blur .lw-btn,
+body.no-blur #toast {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 .page {
   width: 100%;
   max-width: 440px;
@@ -146,6 +157,13 @@ body {
   font-weight: 700;
 }
 
+/* 英文 Tab 标签较长（如 Calculator / Feels-like），6 等分段内缩小字号，
+   避免相邻分段文字贴在一起；中文 3 字标签不受影响 */
+html[lang="en-US"] .tab {
+  font-size: 10px;
+  letter-spacing: 0;
+}
+
 .tabs__indicator {
   position: absolute;
   z-index: 0;
@@ -162,9 +180,34 @@ body {
     0 2px 10px rgba(31, 45, 61, 0.12),
     inset 0 1px 1px rgba(255, 255, 255, 0.85),
     inset 0 -1px 2px rgba(31, 45, 61, 0.06);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  /* 提升为合成器层：指示器滑动全程在合成线程跑，不触发主线程重绘 */
+  /* transform 由滚动 rAF 按真实滚动进度逐帧驱动（与面板严格 1:1），
+     不再使用 CSS transition，避免双重插值造成的滞后感 */
+  transform: translateX(0);
+  /* 策略C：will-change 仅运动期间挂载（body.ui-motion），静止后清除，
+     避免常驻合成层占用 GPU 纹理显存（天玑 GPU 纹理数量敏感） */
+  will-change: auto;
+}
+body.ui-motion .tabs__indicator {
   will-change: transform;
+}
+
+/* 运动期间（点击切换/手势滑动/惯性未停）挂起指示器的 backdrop-filter：
+   模糊采样在移动的合成层上每帧重算，是高刷屏掉帧主因；
+   停止后恢复玻璃模糊——静止时才需要，运动中肉眼不可察 */
+.tabs.tabs--motion .tabs__indicator {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* 切换/滑动期间（body.ui-motion）挂起「随面板一起移动」的玻璃元素：
+   高 DPR 真机（Redmi K60 @560dpi/120Hz 实测）backdrop-filter 在滚动时
+   每帧重新采样模糊，IssueDrawCommands 峰值 60-97ms，是切换掉帧的 20% 来源。
+   仅挂起面板内部元素（.card/.lw-btn）；静止的 .tabs 工具栏不在移动层下，保留模糊。
+   运动仅 90ms，模糊挂起肉眼不可察，静止后立即恢复。 */
+body.ui-motion .card,
+body.ui-motion .lw-btn {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 /* ---------- 滑动面板轨道 ---------- */
@@ -177,9 +220,13 @@ body {
   -ms-overflow-style: none;
   touch-action: pan-x pan-y;
   cursor: grab;
-  /* 高刷屏适配：滚动提升到合成线程，横滑不波及页面其他部分 */
-  will-change: scroll-position;
+  /* 合成层提升仅在切换/滑动期间挂 .is-animating 时存在：
+     常驻会让 6 个面板（含两张大表）一直占用低端机显存 */
   overscroll-behavior-x: contain;
+}
+
+.panels.is-animating {
+  will-change: scroll-position;
 }
 
 .panels::-webkit-scrollbar {
@@ -200,6 +247,9 @@ body {
   /* 高刷丝滑关键：离屏面板跳过布局/绘制，滑动期间主线程不必重排两大速查表 */
   content-visibility: auto;
   contain-intrinsic-size: 380px 420px;
+  /* 布局/绘制隔离：轨道高度逐帧变化时，脏布局不传入面板内部子树
+     （面板 overflow:hidden 非 visible，满足 paint containment 条件） */
+  contain: layout paint style;
 }
 
 /* 调试用：实时刷新率悬浮窗（页脚连点 5 次开启） */
